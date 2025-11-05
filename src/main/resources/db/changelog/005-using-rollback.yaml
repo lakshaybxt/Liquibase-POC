@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - changeSet:
+      id: 005
+      author: arsh
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            columnExists:
+              tableName: users
+              columnName: language
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: language
+                  type: VARCHAR(50)
+                  defaultValue: "JAVA"
+      rollback:
+        - dropColumn:
+            columnName: language
+            tableName: users

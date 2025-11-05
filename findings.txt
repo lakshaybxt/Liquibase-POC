@@ -1,0 +1,64 @@
+- Generally we use HTTPs for secure communication.
+- HTTPs ensures all sensitive data is encrypted both in transit and at rest.
+- In production we use real certificate issued by a trusted CA (like Let’s Encrypt).
+- We run or application behind a reverse proxy (like Nginx) which handles SSL termination.
+
+Cons of using Encrypting by Base64:
+- Base64 is not an encryption method; it is an encoding scheme. It does not provide any security.
+- Anyone who intercepts Base64 encoded data can easily decode it back to its original form.
+- Base64 does not protect against man-in-the-middle attacks, eavesdropping, or data tampering.
+
+So what we can use instead of Base64 for secure communication is:
+- Use HTTPS (HTTP over SSL/TLS) for secure communication over the network.
+- Use strong encryption algorithms like AES (Advanced Encryption Standard) for encrypting sensitive data.
+
+
+databaseChangeLog
+
+This is the root element of any Liquibase changelog file.
+It defines a list of changesets (and sometimes includes, preconditions, or properties) that Liquibase will apply to your database.
+
+changeSet
+
+Each changeSet is one atomic unit of change — a set of operations (like creating a table, adding columns, running SQL, etc.) that Liquibase applies together.
+
+preconditions
+
+preconditions define rules or checks that must be true before Liquibase executes the changes in that changeSet (or even the whole changelog).
+
+databasechangelog - Tracks all applied changesets
+
+databasechangeloglock - Ensures only one Liquibase process modifies the database at a time.
+
+
+MARK_RAN
+
+Behavior: Skips the changeset entirely if the precondition fails.
+
+Next run: Liquibase will not try to execute this changeset again. It is recorded as executed in databasechangelog.
+
+Use case: You want to safely skip a changeset if something already exists (like a table), without risking duplication.
+
+ CONTINUE
+
+Behavior: Ignores the precondition failure and executes the changeset anyway.
+
+Next run: The changeset will execute normally next time as well.
+
+Use case: You don’t care about precondition failures and want to attempt the changes regardless. Risky for things like table creation.
+
+ HALT
+
+Behavior: Stops the migration immediately if the precondition fails.
+
+Next run: The changeset is not executed. You must fix the problem before running again.
+
+Use case: Critical preconditions that must be true before applying changes (e.g., making sure a table exists before altering it).
+
+ WARN
+
+Behavior: Logs a warning if the precondition fails but still executes the changeset.
+
+Next run: The changeset executes normally on the next run.
+
+Use case: You want to be notified about potential issues but don’t want to stop the migration.

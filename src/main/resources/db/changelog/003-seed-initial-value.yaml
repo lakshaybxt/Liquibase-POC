@@ -1,0 +1,28 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003
+      author: arsh
+      preConditions:
+        - and:
+            - not:
+                sqlCheck:
+                  expectedResult: 1
+                  sql: SELECT COUNT(*) FROM users_seq
+            - not:
+                sqlCheck:
+                  expectedResult: 1
+                  sql: SELECT COUNT(*) FROM products_seq
+      changes:
+        - insert:
+            tableName: users_seq
+            columns:
+              - column:
+                  name: next_val
+                  valueNumeric: 1
+
+        - insert:
+            tableName: products_seq
+            columns:
+              - column:
+                  name: next_val
+                  valueNumeric: 1

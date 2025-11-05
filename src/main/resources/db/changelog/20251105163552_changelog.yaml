@@ -1,0 +1,37 @@
+databaseChangeLog:
+- changeSet:
+    id: 1762360557821-3
+    author: lakshaybxt (generated)
+    changes:
+    - dropTable:
+        tableName: products_seq
+- changeSet:
+    id: 1762360557821-4
+    author: lakshaybxt (generated)
+    changes:
+    - dropTable:
+        tableName: users_seq
+- changeSet:
+    id: 1762360557821-5
+    author: lakshaybxt (generated)
+    changes:
+    - dropColumn:
+        columnName: language
+        tableName: users
+- changeSet:
+    id: 1762360557821-1
+    author: lakshaybxt (generated)
+    changes:
+    - modifyDataType:
+        columnName: name
+        newDataType: varchar(150)
+        tableName: products
+- changeSet:
+    id: 1762360557821-2
+    author: lakshaybxt (generated)
+    changes:
+    - modifyDataType:
+        columnName: sku
+        newDataType: varchar(80)
+        tableName: products
+

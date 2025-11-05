@@ -1,0 +1,46 @@
+---
+name: Liquibase Migration
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches:
+      - main
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    env:
+      LIQUIBASE_URL: jdbc:mysql://${{ secrets.DB_HOST }}:${{ secrets.DB_PORT }}/productDB
+      LIQUIBASE_USERNAME: ${{ secrets.DB_USER }}
+      LIQUIBASE_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      LIQUIBASE_CHANGELOG: src/main/resources/db/changelog/db.changelog-master.yaml
+
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Build project
+        run: mvn -B clean package
+
+      - name: Liquibase Validate
+        run: mvn -B liquibase:validate -e \
+          -Dliquibase.url=${LIQUIBASE_URL} \
+          -Dliquibase.username=${LIQUIBASE_USERNAME} \
+          -Dliquibase.password=${LIQUIBASE_PASSWORD} \
+          -Dliquibase.changeLogFile=${LIQUIBASE_CHANGELOG}
+
+      - name: Liquibase Migrate
+        run: mvn -B liquibase:update -e \
+          -Dliquibase.url=${LIQUIBASE_URL} \
+          -Dliquibase.username=${LIQUIBASE_USERNAME} \
+          -Dliquibase.password=${LIQUIBASE_PASSWORD} \
+          -Dliquibase.changeLogFile=${LIQUIBASE_CHANGELOG}

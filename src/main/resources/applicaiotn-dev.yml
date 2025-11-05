@@ -1,0 +1,23 @@
+---
+spring:
+  application:
+    name: ex
+
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/productDB}
+    username: ${DB_USERNAME:mysql}
+    password: ${DB_PASSWORD:changemeinprod!}
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
+
+security:
+  jwt:
+    secret: your_jwt_secret_key
+    expiration: 3600000
