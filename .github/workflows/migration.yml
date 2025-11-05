@@ -33,14 +33,15 @@ jobs:
 
       - name: Liquibase Validate
         run: mvn -B liquibase:validate -e \
-          -Dliquibase.url=${LIQUIBASE_URL} \
-          -Dliquibase.username=${LIQUIBASE_USERNAME} \
-          -Dliquibase.password=${LIQUIBASE_PASSWORD} \
-          -Dliquibase.changeLogFile=${LIQUIBASE_CHANGELOG}
+          "-Dliquibase.url=${LIQUIBASE_URL}" \
+          "-Dliquibase.username=${LIQUIBASE_USERNAME}" \
+          "-Dliquibase.password=${LIQUIBASE_PASSWORD}" \
+          "-Dliquibase.changeLogFile=${LIQUIBASE_CHANGELOG}"
 
       - name: Liquibase Migrate
         run: mvn -B liquibase:update -e \
-          -Dliquibase.url=${LIQUIBASE_URL} \
-          -Dliquibase.username=${LIQUIBASE_USERNAME} \
-          -Dliquibase.password=${LIQUIBASE_PASSWORD} \
-          -Dliquibase.changeLogFile=${LIQUIBASE_CHANGELOG}
+          "-Dliquibase.url=${LIQUIBASE_URL}" \
+          "-Dliquibase.username=${LIQUIBASE_USERNAME}" \
+          "-Dliquibase.password=${LIQUIBASE_PASSWORD}" \
+          "-Dliquibase.changeLogFile=${LIQUIBASE_CHANGELOG}"
+
