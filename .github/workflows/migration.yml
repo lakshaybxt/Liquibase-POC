@@ -12,9 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     env:
-      LIQUIBASE_URL: jdbc:mysql://ec2-13-235-82-233.ap-south-1.compute.amazonaws.com:3306/productDB
-      LIQUIBASE_USERNAME: mysql
-      LIQUIBASE_PASSWORD: changemeinprod!
+      LIQUIBASE_URL: jdbc:mysql://${{ secrets.DB_HOST }}:${{ secrets.DB_PORT }}/productDB
+      LIQUIBASE_USERNAME: ${{ secrets.DB_USER }}
+      LIQUIBASE_PASSWORD: ${{ secrets.DB_PASSWORD }}
       LIQUIBASE_CHANGELOG: src/main/resources/db/changelog/db.changelog-master.yaml
 
 
