@@ -191,4 +191,12 @@ public class ProductServiceImplTest {
                     .save(ArgumentMatchers.any(Product.class));
         }
     }
+
+    @Nested
+    @DisplayName("Delete Product Tests")
+    class DeleteProductTests {}
+
+    @Nested
+    @DisplayName("Find Product by ID Tests")
+    class FindProductByIdTests {}
 }
