@@ -1,5 +1,7 @@
 package com.testing.ex.domain.dto.request;
 
+import lombok.Builder;
+
 import java.math.BigDecimal;
 import java.util.Map;
 
@@ -13,6 +15,7 @@ import java.util.Map;
  * @param category the category of the product
  * @param features the features of the product
  */
+@Builder
 public record UpdateProductRequest(
         String name,
         String sku,

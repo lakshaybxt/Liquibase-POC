@@ -205,7 +205,7 @@ public class ProductServiceImpl implements ProductService {
    * @param p The Product entity to convert.
    * @return The corresponding ProductDtos.Response DTO.
    */
-  private ProductResponse toResponse(Product p) {
+  ProductResponse toResponse(Product p) {
     return new ProductResponse(
         p.getId(),
         p.getName(),

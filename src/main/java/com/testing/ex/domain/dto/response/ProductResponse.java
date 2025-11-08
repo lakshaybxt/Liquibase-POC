@@ -1,5 +1,7 @@
 package com.testing.ex.domain.dto.response;
 
+import lombok.Builder;
+
 import java.math.BigDecimal;
 import java.util.Map;
 
@@ -14,6 +16,7 @@ import java.util.Map;
  * @param description the product description
  * @param features the product features
  */
+@Builder
 public record ProductResponse(
     Long id,
     String name,

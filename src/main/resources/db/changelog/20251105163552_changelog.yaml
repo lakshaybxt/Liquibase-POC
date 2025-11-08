@@ -34,4 +34,3 @@ databaseChangeLog:
         columnName: sku
         newDataType: varchar(80)
         tableName: products
-

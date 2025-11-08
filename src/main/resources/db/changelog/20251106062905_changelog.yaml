@@ -1,0 +1,14 @@
+databaseChangeLog:
+- changeSet:
+    id: 1762410551107-1
+    author: lakshaybxt (generated)
+    changes:
+    - dropTable:
+        tableName: products_seq
+- changeSet:
+    id: 1762410551107-2
+    author: lakshaybxt (generated)
+    changes:
+    - dropTable:
+        tableName: users_seq
+

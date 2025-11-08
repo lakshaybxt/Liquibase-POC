@@ -1,0 +1,202 @@
+databaseChangeLog:
+- changeSet:
+    id: 1762410159151-1
+    author: lakshaybxt (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: product_id
+            type: BIGINT
+        - column:
+            name: features
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: feature_key
+            type: VARCHAR(255)
+        tableName: product_features
+- changeSet:
+    id: 1762410159151-2
+    author: lakshaybxt (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: category
+            type: VARCHAR(60)
+        - column:
+            constraints:
+              nullable: false
+            name: created_at
+            type: datetime
+        - column:
+            name: description
+            type: VARCHAR(2000)
+        - column:
+            constraints:
+              nullable: false
+            name: name
+            type: VARCHAR(150)
+        - column:
+            constraints:
+              nullable: false
+            name: price
+            type: DECIMAL(12, 2)
+        - column:
+            constraints:
+              nullable: false
+            name: sku
+            type: VARCHAR(80)
+        - column:
+            constraints:
+              nullable: false
+            name: tenant_id
+            type: VARCHAR(36)
+        - column:
+            constraints:
+              nullable: false
+            name: updated_at
+            type: datetime
+        tableName: products
+- changeSet:
+    id: 1762410159151-3
+    author: lakshaybxt (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: next_val
+            type: BIGINT
+        tableName: products_seq
+- changeSet:
+    id: 1762410159151-4
+    author: lakshaybxt (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: created_at
+            type: datetime
+        - column:
+            constraints:
+              nullable: false
+              unique: true
+            name: email
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: enabled
+            type: BIT(1)
+        - column:
+            constraints:
+              nullable: false
+            name: password
+            type: VARCHAR(255)
+        - column:
+            name: role
+            type: TINYINT(3)
+        - column:
+            constraints:
+              nullable: false
+            name: updated_at
+            type: datetime
+        - column:
+            constraints:
+              nullable: false
+              unique: true
+            name: username
+            type: VARCHAR(255)
+        - column:
+            name: verification_code
+            type: VARCHAR(255)
+        - column:
+            name: verification_expiration
+            type: datetime
+        tableName: users
+- changeSet:
+    id: 1762410159151-5
+    author: lakshaybxt (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: next_val
+            type: BIGINT
+        tableName: users_seq
+- changeSet:
+    id: 1762410159151-6
+    author: lakshaybxt (generated)
+    changes:
+    - addUniqueConstraint:
+        columnNames: tenant_id, sku
+        constraintName: ix_products_tenant_sku
+        tableName: products
+- changeSet:
+    id: 1762410159151-7
+    author: lakshaybxt (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: tenant_id
+        - column:
+            name: category
+        indexName: ix_products_tenant_category
+        tableName: products
+- changeSet:
+    id: 1762410159151-8
+    author: lakshaybxt (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: tenant_id
+        - column:
+            name: name
+        indexName: ix_products_tenant_name
+        tableName: products
+- changeSet:
+    id: 1762410159151-9
+    author: lakshaybxt (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: product_id
+        baseTableName: product_features
+        constraintName: FKd2x1ygsefpn2v5gjett1skhsr
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: products
+        validate: true
+

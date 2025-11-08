@@ -3,6 +3,8 @@ package com.testing.ex.domain.dto.request;
 import com.testing.ex.domain.Category;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
+
 import java.math.BigDecimal;
 import java.util.Map;
 
@@ -16,6 +18,7 @@ import java.util.Map;
  * @param category the category of the product
  * @param features the features of the product
  */
+@Builder
 public record CreateProductRequest(
         @NotBlank String name,
         @NotBlank String sku,
