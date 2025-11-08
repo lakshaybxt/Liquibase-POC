@@ -62,6 +62,16 @@ public class ProductServiceImplTest {
                 .category("Updated Category")
                 .features(null)
                 .build();
+
+        testProductResponse = ProductResponse.builder()
+                .id(1L)
+                .name("Test Product")
+                .sku("SKU12345")
+                .price(BigDecimal.valueOf(1L))
+                .category("Test Category")
+                .features(null)
+                .description("This is test product")
+                .build();
     }
 
     @Nested
@@ -198,5 +208,26 @@ public class ProductServiceImplTest {
 
     @Nested
     @DisplayName("Find Product by ID Tests")
-    class FindProductByIdTests {}
+    class FindProductByIdTests {
+
+        @Test
+        @DisplayName("Should return product when found")
+        void shouldReturnProduct() {
+            // Given
+            final String userId = "user-123";
+            final Long productId = 1L;
+
+            // When
+            Mockito.when(productRepository.findByIdAndTenantId(productId, userId))
+                    .thenReturn(Optional.of(testProduct));
+
+            final Product result = productServiceImpl.getProductEntityByIdAndUserId(productId, userId);
+
+            // Then
+            assertNotNull(result);
+            assertEquals(testProduct, result);
+            Mockito.verify(productRepository, Mockito.times(1))
+                    .findByIdAndTenantId(productId, userId);
+        }
+    }
 }

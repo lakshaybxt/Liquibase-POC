@@ -134,7 +134,6 @@ public class ProductServiceImpl implements ProductService {
         existing.setFeatures(request.features());
       }
 
-
       Product saved = productRepository.save(existing);
       sw.stop();
       log.info("action=updateProduct userId={} productId={} durationMs={}",
@@ -157,31 +156,22 @@ public class ProductServiceImpl implements ProductService {
   @Override
   @Transactional
   public void deleteProduct(String userId, Long productId) {
-    String requestId = UUID.randomUUID().toString();
-    MDC.put("requestId", requestId);
-    MDC.put("userId", userId);
-    MDC.put("productId", String.valueOf(productId));
     StopWatch sw = new StopWatch();
     sw.start();
 
-    log.info("action=deleteProduct requestId={} userId={} productId={}", requestId, userId,
-        productId);
+    log.info("action=deleteProduct userId={} productId={}", userId, productId);
     try {
       Product existing = productRepository.findByIdAndTenantId(productId, userId)
           .orElseThrow(() -> new IllegalArgumentException("Product not found or access denied"));
       productRepository.delete(existing);
       sw.stop();
-      log.info("action=deleteProduct requestId={} userId={} productId={} durationMs={}",
-          requestId, userId, productId, sw.getTotalTimeMillis());
+      log.info("action=deleteProduct userId={} productId={} durationMs={}",
+          userId, productId, sw.getTotalTimeMillis());
     } catch (Exception e) {
       sw.stop();
-      log.error("action=deleteProduct requestId={} userId={} productId={} error={}",
-          requestId, userId, productId, e.getMessage(), e);
+      log.error("action=deleteProduct userId={} productId={} error={}",
+          userId, productId, e.getMessage(), e);
       throw e;
-    } finally {
-      MDC.remove("requestId");
-      MDC.remove("userId");
-      MDC.remove("productId");
     }
   }
 
