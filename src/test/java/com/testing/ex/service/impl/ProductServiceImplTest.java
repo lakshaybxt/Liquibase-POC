@@ -9,8 +9,13 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -204,7 +209,52 @@ public class ProductServiceImplTest {
 
     @Nested
     @DisplayName("Delete Product Tests")
-    class DeleteProductTests {}
+    class DeleteProductTests {
+
+        @Test
+        @DisplayName("Should delete product successfully when valid product id is provided")
+        void testDeleteProduct_Successfully() {
+            // Given
+            final String userId = "user-123";
+            final Long productId = 1L;
+
+            Mockito.when(productRepository.findByIdAndTenantId(productId, userId))
+                    .thenReturn(Optional.of(testProduct));
+
+            // When
+            productServiceImpl.deleteProduct(userId, productId);
+
+            // Then
+            Mockito.verify(productRepository, Mockito.times(1))
+                    .findByIdAndTenantId(productId, userId);
+            Mockito.verify(productRepository, Mockito.times(1))
+                    .delete(testProduct);
+            Mockito.verifyNoMoreInteractions(productRepository);
+        }
+
+
+        @Test
+        @DisplayName("Should throw exception when product not found")
+        void shouldThrowExceptionWhenProductNotFound() {
+            // Given
+            final String userId = "user-123";
+            final Long productId = 1L;
+
+            // When & Then
+            Mockito.when(productRepository.findByIdAndTenantId(productId, userId))
+                    .thenReturn(Optional.empty());
+
+            final IllegalArgumentException ex = Assertions.assertThrows(IllegalArgumentException.class, () -> {
+                productServiceImpl.deleteProduct(userId, productId);
+            });
+
+            assertEquals("Product not found or access denied", ex.getMessage());
+            Mockito.verify(productRepository, Mockito.times(1))
+                    .findByIdAndTenantId(productId, userId);
+            Mockito.verify(ProductServiceImplTest.this.productRepository, Mockito.never())
+                    .delete(ArgumentMatchers.any(Product.class));
+        }
+    }
 
     @Nested
     @DisplayName("Find Product by ID Tests")
@@ -268,6 +318,71 @@ public class ProductServiceImplTest {
             assertEquals("Product not found or access denied", ex.getMessage());
             Mockito.verify(productRepository, Mockito.times(1))
                     .findByIdAndTenantId(null, userId);
+        }
+    }
+
+    @Nested
+    @DisplayName("Find All Products Tests")
+    class FindAllProductsTests {
+
+        @Test
+        @DisplayName("Should return all products for a current session user")
+        void shouldReturnAllProductsForUser() {
+            // Given
+            final String userId = "user-123";
+            Pageable pageable = PageRequest.of(0, 1);
+            List<Product> products = List.of(testProduct);
+            Page<Product> productPage = new PageImpl<>(products, pageable, products.size());
+
+            Mockito.when(productRepository.findAllByTenantId(userId, pageable))
+                    .thenReturn(productPage);
+
+            // When
+            Page<ProductResponse> result = productServiceImpl.getAllByUserId(userId, pageable);
+
+            assertNotNull(result);
+            assertEquals(1, result.getTotalElements());
+            Mockito.verify(productRepository, Mockito.times(1))
+                    .findAllByTenantId(userId, pageable);
+        }
+
+        @Test
+        @DisplayName("Should return empty page when no products found for user")
+        void shouldReturnEmptyPageWhenNoProductsFound() {
+            // Given
+            final String userId = "user-123";
+            Pageable pageable = PageRequest.of(0, 1);
+
+            Mockito.when(productRepository.findAllByTenantId(userId, pageable))
+                    .thenReturn(Page.empty(pageable));
+
+            // When
+            Page<ProductResponse> result = productServiceImpl.getAllByUserId(userId, pageable);
+
+            // Then
+            assertEquals(0, result.getTotalElements());
+            Mockito.verify(productRepository, Mockito.times(1))
+                    .findAllByTenantId(userId, pageable);
+
+        }
+
+        @Test
+        @DisplayName("Should throw exception when repository fails")
+        void shouldThrowExceptionWhenRepositoryFails() {
+            // Given
+            final String userId = "user-123";
+            Pageable pageable = PageRequest.of(0, 1);
+            Mockito.when(productRepository.findAllByTenantId(userId, pageable))
+                    .thenThrow(new RuntimeException("Database error"));
+
+            // When & Then
+            final RuntimeException ex = assertThrows(RuntimeException.class, () -> {
+                productServiceImpl.getAllByUserId(userId, pageable);
+            });
+
+            assertEquals("Database error", ex.getMessage());
+            Mockito.verify(productRepository, Mockito.times(1))
+                    .findAllByTenantId(userId, pageable);
         }
     }
 }
