@@ -190,7 +190,7 @@ public class ProductServiceImplTest {
                     .thenReturn(Optional.empty());
 
             // When & Then
-            IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+            final IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
                 productServiceImpl.updateProduct(userId, productId, testUpdateRequest);
             });
 
@@ -228,6 +228,46 @@ public class ProductServiceImplTest {
             assertEquals(testProduct, result);
             Mockito.verify(productRepository, Mockito.times(1))
                     .findByIdAndTenantId(productId, userId);
+        }
+
+        @Test
+        @DisplayName("Should throw exception when product not found")
+        void shouldThrowExceptionWhenProductNotFound() {
+            // Given
+            final String userId = "user-123";
+            final Long productId = 1L;
+
+            // When & Then
+            Mockito.when(productRepository.findByIdAndTenantId(productId, userId))
+                    .thenReturn(Optional.empty());
+
+            final IllegalArgumentException ex = Assertions.assertThrows(IllegalArgumentException.class, () -> {
+                productServiceImpl.getProductEntityByIdAndUserId(productId, userId);
+            });
+
+            assertEquals("Product not found or access denied", ex.getMessage());
+            Mockito.verify(productRepository, Mockito.times(1))
+                    .findByIdAndTenantId(productId, userId);
+        }
+
+
+        @Test
+        @DisplayName("Should throw exception when product id is null")
+        void shouldHandleNullId() {
+            // Given
+            final String userId = "user-123";
+
+            // When & Then
+            Mockito.when(productRepository.findByIdAndTenantId(null, userId))
+                    .thenReturn(Optional.empty());
+
+            final IllegalArgumentException ex = Assertions.assertThrows(IllegalArgumentException.class, () -> {
+                productServiceImpl.getProductEntityByIdAndUserId(null, userId);
+            });
+
+            assertEquals("Product not found or access denied", ex.getMessage());
+            Mockito.verify(productRepository, Mockito.times(1))
+                    .findByIdAndTenantId(null, userId);
         }
     }
 }
