@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("ProductServiceImpl Unit Test")
-public class ProductServiceImplTest {
+public class ProductServiceImplTests {
 
     @Mock
     private ProductRepository productRepository;
@@ -202,7 +202,7 @@ public class ProductServiceImplTest {
             assertEquals("Product not found or access denied", ex.getMessage());
             Mockito.verify(productRepository, Mockito.times(1))
                     .findByIdAndTenantId(productId, userId);
-            Mockito.verify(ProductServiceImplTest.this.productRepository, Mockito.never())
+            Mockito.verify(ProductServiceImplTests.this.productRepository, Mockito.never())
                     .save(ArgumentMatchers.any(Product.class));
         }
     }
@@ -251,7 +251,7 @@ public class ProductServiceImplTest {
             assertEquals("Product not found or access denied", ex.getMessage());
             Mockito.verify(productRepository, Mockito.times(1))
                     .findByIdAndTenantId(productId, userId);
-            Mockito.verify(ProductServiceImplTest.this.productRepository, Mockito.never())
+            Mockito.verify(ProductServiceImplTests.this.productRepository, Mockito.never())
                     .delete(ArgumentMatchers.any(Product.class));
         }
     }
